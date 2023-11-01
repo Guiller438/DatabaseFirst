@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CancionesDFModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Album">
+    <Key>
+      <PropertyRef Name="AlbumID" />
+    </Key>
+    <Property Name="AlbumID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NombreAlbum" Type="nchar" MaxLength="200" Nullable="false" />
+    <Property Name="AnioLanzamiento" Type="smallint" />
+    <Property Name="NumCanciones" Type="smallint" />
+    <Property Name="ArtistaID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Artista">
+    <Key>
+      <PropertyRef Name="ArtistaID" />
+    </Key>
+    <Property Name="ArtistaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NombrePilaArtista" Type="nchar" MaxLength="250" Nullable="false" />
+    <Property Name="NombreArtistico" Type="nchar" MaxLength="200" />
+    <Property Name="FechaNacimiento" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Cancion">
+    <Key>
+      <PropertyRef Name="CancionID" />
+    </Key>
+    <Property Name="CancionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NombreCancion" Type="nchar" MaxLength="250" Nullable="false" />
+    <Property Name="Duracion" Type="float" />
+    <Property Name="AnioLanzamiento" Type="smallint" />
+    <Property Name="Compositor" Type="nchar" MaxLength="250" />
+    <Property Name="AlbumID" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Album_Artista">
+    <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
+    <End Role="Album" Type="Self.Album" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Artista">
+        <PropertyRef Name="ArtistaID" />
+      </Principal>
+      <Dependent Role="Album">
+        <PropertyRef Name="ArtistaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Cancion_Album">
+    <End Role="Album" Type="Self.Album" Multiplicity="1" />
+    <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Album">
+        <PropertyRef Name="AlbumID" />
+      </Principal>
+      <Dependent Role="Cancion">
+        <PropertyRef Name="AlbumID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CancionesDFModelStoreContainer">
+    <EntitySet Name="Album" EntityType="Self.Album" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Artista" EntityType="Self.Artista" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Cancion" EntityType="Self.Cancion" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Album_Artista" Association="Self.FK_Album_Artista">
+      <End Role="Artista" EntitySet="Artista" />
+      <End Role="Album" EntitySet="Album" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Cancion_Album" Association="Self.FK_Cancion_Album">
+      <End Role="Album" EntitySet="Album" />
+      <End Role="Cancion" EntitySet="Cancion" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

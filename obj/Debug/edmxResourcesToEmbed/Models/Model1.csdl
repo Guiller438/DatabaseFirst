@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CancionesDFModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Album">
+    <Key>
+      <PropertyRef Name="AlbumID" />
+    </Key>
+    <Property Name="AlbumID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreAlbum" Type="String" MaxLength="200" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="AnioLanzamiento" Type="Int16" />
+    <Property Name="NumCanciones" Type="Int16" />
+    <Property Name="ArtistaID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Artista" Relationship="Self.FK_Album_Artista" FromRole="Album" ToRole="Artista" />
+    <NavigationProperty Name="Cancions" Relationship="Self.FK_Cancion_Album" FromRole="Album" ToRole="Cancion" />
+  </EntityType>
+  <EntityType Name="Artista">
+    <Key>
+      <PropertyRef Name="ArtistaID" />
+    </Key>
+    <Property Name="ArtistaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombrePilaArtista" Type="String" MaxLength="250" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="NombreArtistico" Type="String" MaxLength="200" FixedLength="true" Unicode="true" />
+    <Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Albums" Relationship="Self.FK_Album_Artista" FromRole="Artista" ToRole="Album" />
+  </EntityType>
+  <EntityType Name="Cancion">
+    <Key>
+      <PropertyRef Name="CancionID" />
+    </Key>
+    <Property Name="CancionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreCancion" Type="String" MaxLength="250" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Duracion" Type="Double" />
+    <Property Name="AnioLanzamiento" Type="Int16" />
+    <Property Name="Compositor" Type="String" MaxLength="250" FixedLength="true" Unicode="true" />
+    <Property Name="AlbumID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Album" Relationship="Self.FK_Cancion_Album" FromRole="Cancion" ToRole="Album" />
+  </EntityType>
+  <Association Name="FK_Album_Artista">
+    <End Role="Artista" Type="Self.Artista" Multiplicity="1" />
+    <End Role="Album" Type="Self.Album" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Artista">
+        <PropertyRef Name="ArtistaID" />
+      </Principal>
+      <Dependent Role="Album">
+        <PropertyRef Name="ArtistaID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Cancion_Album">
+    <End Role="Album" Type="Self.Album" Multiplicity="1" />
+    <End Role="Cancion" Type="Self.Cancion" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Album">
+        <PropertyRef Name="AlbumID" />
+      </Principal>
+      <Dependent Role="Cancion">
+        <PropertyRef Name="AlbumID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CancionesDFEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Albums" EntityType="Self.Album" />
+    <EntitySet Name="Artistas" EntityType="Self.Artista" />
+    <EntitySet Name="Cancions" EntityType="Self.Cancion" />
+    <AssociationSet Name="FK_Album_Artista" Association="Self.FK_Album_Artista">
+      <End Role="Artista" EntitySet="Artistas" />
+      <End Role="Album" EntitySet="Albums" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Cancion_Album" Association="Self.FK_Cancion_Album">
+      <End Role="Album" EntitySet="Albums" />
+      <End Role="Cancion" EntitySet="Cancions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
